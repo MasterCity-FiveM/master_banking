@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <link href="style.css" rel="stylesheet" type="text/css" />
+		<script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+	
+		<style>
+            .general {display: none;}
+            .FingerPrint {display: none;}
+            .main {display: none;}
+            .deposit {display: none;}
+			.depositUI {display: none;} 
+			.withdrawUI {display: none;}
+			.balanceUI {display: none;}
+			.transferUI {display: none;}
+		</style>	
+	</head>
+    <body>
+		<div class="FingerPrint">
+			<div class="main1 rtl"> 
+				<p style="text-align:center;font-size:20px;">سلام به بانک ملی مستر سیتی خوش آمدید.</p>
+				<p style='margin-top:-15px;'>لطفا اثر انگشتتان را بزنید.</p>
+				<div style="margin: 25px auto;" class="fingerprint-default"></div>
+				<p><button id="exitbank2">خروج</button></p>
+			</div>
+		</div>
+
+		<div class="general">
+			<div class="main">            
+				<p class="rtl" style="text-align:center;">سلام، <span class="username1"> عزیز.</span></p>
+				<p class="rtl" style="text-align:center;margin-top: -10px;">موجودی حساب: <span class="curbalance"></span></p>
+				
+				<p><button id="deposit">سپرد گذاری</button> <button id="withdraw">برداشت وجه</button></p>
+				<p><button id="transfer">انتقال وجه</button></p>
+				<p><button id="exitbank">خروج</button></p>
+			</div>
+		</div>
+		
+		<div class='depositUI'>
+			<form id="deposit1">
+				<p class="rtl" style="text-align:center;margin-top: 100px;">موجودی حساب: <span class="curbalance"></span></p>
+				<p style="text-align:center"><input id="amount" type="text" placeholder="مبلغ"></p>
+				<p style="text-align:center"><button id="deposit1" type="submit">واریز وجه</button></p>
+				<p style="text-align:center"><button id="canceldeposit" type="button">منوی قبلی</button></p>
+			</form>
+		</div>
+
+		<div class='withdrawUI'>
+			<form id="withdraw1">
+				<p class="rtl" style="text-align:center;margin-top: 100px;">موجودی حساب: <span class="curbalance"></span></p>
+				<p style="text-align:center"><input id="amountw" type="text" placeholder="مبلغ"></p>
+				<p style="text-align:center"><button id="withdraw1" type="submit">برداشت وجه</button></p>
+				<p style="text-align:center"><button id="cancelwithdraw" type="button">منوی قبلی</button></p>
+			</form>
+		</div>
+
+		<div class='balanceUI'>
+			<h3 class="sans">Salam, <span class="username1"></span></h3>
+			<span class="curbalance" id="balanceX"></span>
+			<button id="cancelbalance" type="button">Bazgasht</button> 	
+		</div>
+
+		<div class='transferUI'>
+			<form id="transfer1">
+				<p class="rtl" style="text-align:center;margin-top: 90px;">موجودی حساب: <span class="curbalance"></span></p>
+				<p style="text-align:center"><input id="to" type="text" placeholder="شناسه بازیکن"></p>
+				<p style="text-align:center"><input id="amountt" type="text" placeholder="مبلغ"></p>
+				<p style="text-align:center"><button id="transfer1" type="submit">واریز وجه</button></p>
+				<p style="text-align:center"><button id="canceltransfer" type="button">منوی قبلی</button></p>
+			</form>
+		</div>
+	</body>
+	
+	<script type="text/javascript">
+	
+	
+	$(function() {
+		/* open the UI for user */
+		window.addEventListener('message', function(event) {
+
+			if (event.data.type == "openGeneral"){
+                
+				$('.FingerPrint').css('display', 'block')
+                $('.deposit').css('display', 'none')
+				
+			} else if(event.data.type == "balanceHUD") {
+					$('.username1').html(event.data.player);
+					$('.curbalance').html('<span style="color:green">' + '$' + '</span>' + event.data.balance)
+					
+			
+			} else if (event.data.type == "closeAll"){
+                $('.main').css('display', 'none')
+				$('.general').css('display', 'none')
+                $('.deposit').css('display', 'none')
+			} 
+			
+		});
+	});
+	
+
+	</script>
+	
+	<script type="text/javascript">	
+        $('#exitbank').click(function(){
+            $('.general').css('display', 'none')
+            $('.main').css('display', 'none')
+            $.post('http://new_banking/NUIFocusOff', JSON.stringify({}));
+            
+        })
+        $('#exitbank2').click(function(){
+            $('.FingerPrint').css('display', 'none')
+            $.post('http://new_banking/NUIFocusOff', JSON.stringify({}));
+            
+        })
+        
+         $('#deposit').click(function(){
+            $('.general').css('display', 'none')
+            $('.depositUI').css('display', 'block')
+			$('#deposit1').css('display', 'block')
+        })
+		
+		
+         $('#fingerprint-default').click(function(){
+			$("#fingerprint-default").animate({
+				opacity: 0.2
+			}, 500, function() {
+				$('.FingerPrint').css('display', 'none');
+				$('.general').css('display', 'block');
+				$('.main').css('display', 'block');
+			});
+        })
+		
+		$('#cancelbalance').click(function(){
+            $('.general').css('display', 'block')
+            $('.balanceUI').css('display', 'none')
+		
+        })
+		
+		$('#balance').click(function(){
+            $('.general').css('display', 'none')
+            $('.balanceUI').css('display', 'block')
+
+        })
+		
+		 $('#withdraw').click(function(){
+            $('.general').css('display', 'none')
+            $('.withdrawUI').css('display', 'block')
+			$('#withdraw1').css('display', 'block')
+			
+		
+        })
+         $('#canceldeposit').click(function(){
+    
+            $('.general').css('display', 'block')
+            $('.depositUI').css('display', 'none')
+        })
+         $('#cancelwithdraw').click(function(){
+    
+            $('.general').css('display', 'block')
+            $('.withdrawUI').css('display', 'none')
+        })
+        
+    $("#deposit1").submit(function(e) {
+        e.preventDefault(); // Prevent form from submitting
+        
+        $.post('http://new_banking/deposit', JSON.stringify({
+            amount: $("#amount").val()
+			
+        }));
+		
+		$('.general').css('display', 'none')
+		$('.depositUI').css('display', 'none')
+		$('#deposit1').css('display', 'none')
+		
+		$.post('http://new_banking/NUIFocusOff', JSON.stringify({}));
+	});
+	
+	$("#transfer1").submit(function(h) {
+        h.preventDefault(); // Prevent form from submitting
+        
+        $.post('http://new_banking/transfer', JSON.stringify({
+			to: $("#to").val(),
+            amountt: $("#amountt").val()
+			
+        }));
+		
+		$('.general').css('display', 'none')
+		$('.depositUI').css('display', 'none')
+		$('#deposit1').css('display', 'none')
+		$('.transferUI').css('display', 'none')
+		$('#transfer1').css('display', 'none')
+		$('.withdrawUI').css('display', 'none')
+		$('.withdraw11').css('display', 'none')
+		$.post('http://new_banking/NUIFocusOff', JSON.stringify({}));
+	});
+		
+		
+	$("#withdraw1").submit(function(g) {
+		g.preventDefault(); // Prevent form from submitting
+        
+        $.post('http://new_banking/withdrawl', JSON.stringify({
+            amountw: $("#amountw").val()
+			
+        }));
+		$('.general').css('display', 'none')
+		$('.depositUI').css('display', 'none')
+		$('#deposit1').css('display', 'none')
+		$('.withdrawUI').css('display', 'none')
+		$('.withdraw11').css('display', 'none')
+		
+		$.post('http://new_banking/NUIFocusOff', JSON.stringify({}));
+	});
+	
+	$('#balance').click(function(){
+            $('.general').css('display', 'none')
+			$('.balanceUI').css('display', 'block')
+			$.post('http://new_banking/balance', JSON.stringify({}));
+     })
+	 
+	 $('#transfer').click(function(){
+            $('.general').css('display', 'none')
+		$('.transferUI').css('display', 'block')
+		 $('#transfer1').css('display', 'block')
+
+     })
+	 
+	 $('#canceltransfer').click(function(){
+            $('.general').css('display', 'block')
+			$('.transferUI').css('display', 'none')
+		
+     })
+
+
+	document.onkeyup = function(data){
+        if (data.which == 27){
+            $('.main').css('display', 'none')
+            $('.general').css('display', 'none')
+            $('.deposit').css('display', 'none')
+			$('.withdraw').css('display', 'none')
+			$('.transferUI').css('display', 'none')
+			$('.depositUI').css('display', 'none')
+			$('#deposit1').css('display', 'none')
+			$('.withdrawUI').css('display', 'none')
+			$('.withdraw11').css('display', 'none')
+            $.post('http://new_banking/NUIFocusOff', JSON.stringify({}));
+        }
+    }
+
+	
+	</script>
+</html>
