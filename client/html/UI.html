@@ -14,17 +14,21 @@
     <body>
 		<div class="FingerPrint">
 			<div class="main1 rtl"> 
-				<p style="text-align:center;font-size:20px;">سلام به بانک ملی مَسترسیتی خوش آمدید.</p>
-				<p style='margin-top:-15px;'>لطفا اثر انگشتتان را بزنید.</p>
+				<div class="box1">
+					<p style="text-align:center;font-size:20px;">سلام به بانک ملی مَسترسیتی خوش آمدید.</p>
+					<p style='margin-top:-15px;'>لطفا اثرانگشت خود را تایید کنید.</p>
+				</div>
 				<div style="margin: 25px auto;" class="fingerprint-default" id='fingerprint-default'></div>
 				<p><button class="exitbank">خروج</button></p>
 			</div>
 		</div>
 
 		<div class="general">
-			<div class="main">            
-				<p class="rtl" style="text-align: center;">سلام، <span class="playername"></span> عزیز.</p>
-				<p class="rtl" style="text-align: center;margin-top: -10px;">موجودی حساب: <span class="curbalance"></span></p>
+			<div class="main">
+				<div class="box1">
+					<p class="rtl" style="text-align: center;">سلام، <span class="playername"></span> عزیز.</p>
+					<p class="rtl" style="text-align: center;margin-top: -10px;">موجودی حساب: <span class="curbalance"></span></p>
+				</div>
 				<p><button id="deposit">سپرده گذاری</button> <button id="withdraw">برداشت وجه</button></p>
 				<p><button id="transfer">انتقال وجه</button></p>
 				<p><button class="exitbank">خروج</button></p>
@@ -32,7 +36,9 @@
 		</div>
 		
 		<div class='depositUI'>
-			<p class="rtl" style="text-align:center;margin-top: 100px;">موجودی حساب: <span class="curbalance"></span></p>
+			<div class="box1" style="margin-top: 60px;">
+				<p class="rtl" style="text-align:center;">موجودی حساب: <span class="curbalance"></span></p>
+			</div>
 			<p style="text-align:center"><input id="amount" type="text" placeholder="مبلغ"></p>
 			<p style="text-align:center"><button id="deposit_btn" type="button">سپرده گذاری</button></p>
 			<p style="text-align:center"><button id="canceldeposit" type="button">منوی قبلی</button></p>
@@ -40,7 +46,9 @@
 		</div>
 
 		<div class='withdrawUI'>
-			<p class="rtl" style="text-align:center;margin-top: 100px;">موجودی حساب: <span class="curbalance"></span></p>
+			<div class="box1" style="margin-top: 60px;">
+				<p class="rtl" style="text-align:center;">موجودی حساب: <span class="curbalance"></span></p>
+			</div>
 			<p style="text-align:center"><input id="amountw" type="text" placeholder="مبلغ"></p>
 			<p style="text-align:center"><button id="withdraw_btn" type="button">برداشت وجه</button></p>
 			<p style="text-align:center"><button id="cancelwithdraw" type="button">منوی قبلی</button></p>
@@ -48,7 +56,9 @@
 		</div>
 		
 		<div class='transferUI'>
-			<p class="rtl" style="text-align:center;margin-top: 90px;">موجودی حساب: <span class="curbalance"></span></p>
+			<div class="box1" style="text-align:center;margin-top: 50px;">
+				<p class="rtl" style="text-align:center;">موجودی حساب: <span class="curbalance"></span></p>
+			</div>
 			<p style="text-align:center"><input id="to" type="text" placeholder="کدملی دریافت کننده"></p>
 			<p style="text-align:center"><input id="amountt" type="text" placeholder="مبلغ"></p>
 			<p style="text-align:center"><button id="transfer_btn" type="button">انتقال وجه</button></p>
