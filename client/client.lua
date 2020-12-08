@@ -117,6 +117,16 @@ if bankMenu then
   end)
 end
 
+AddEventHandler('esx:onPlayerDeath', function()
+	if inMenu then
+		FreezeEntityPosition(PlayerPedId(), false)
+		-- PlaySoundFrontend(-1, "ATM_WINDOW", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
+		inMenu = false
+		SetNuiFocus(false, false)
+		SendNUIMessage({type = 'closeAll'})
+	end
+end)
+
 --===============================================
 --==             Map Blips	                   ==
 --===============================================
