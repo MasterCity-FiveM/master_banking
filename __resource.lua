@@ -11,6 +11,6 @@ files {
 	'client/html/img/phone.png',
 	'client/html/img/clock.png',
 	'client/html/img/receipt.png',
+	'client/html/img/fingerprint.png',
 	'client/html/img/knife.png'
-
 }

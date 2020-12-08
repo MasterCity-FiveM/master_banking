@@ -1,45 +1,18 @@
---================================================================================================
---==                                VARIABLES - DO NOT EDIT                                     ==
---================================================================================================
 ESX = nil
-local robbed = {}
-
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 RegisterServerEvent('bank:deposit')
 AddEventHandler('bank:deposit', function(amount)
 	local _source = source
-	
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	if amount == nil or amount <= 0 or amount > xPlayer.money then
-		-- advanced notification with bank icon
-		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Pardakhte Vajh', 'Meqdare Vorodi Eshtebah ast', 'CHAR_BANK_MAZE', 9)
+	
+	if amount == nil or amount <= 0 or amount > xPlayer.getMoney() then
+		TriggerClientEvent("pNotify:SendNotification", _source, { text = "مقدار وارد شده صحیح نیست.", type = "error", timeout = 3000, layout = "bottomCenter"})
 	else
 		xPlayer.removeMoney(amount)
-		xPlayer.addBank(tonumber(amount))
-                -- advanced notification with bank icon
-		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Pardakhte Vajh', 'Shoma ~g~$' .. amount .. '~s~ Dakhele Bank Khod Gozashtid', 'CHAR_BANK_MAZE', 9)
-	end
-end)
-
-RegisterServerEvent('new_banking:disableforhour')
-AddEventHandler('new_banking:disableforhour', function(pos)
-	table.insert(robbed, {
-		pos = pos,
-		timer = GetGameTimer()
-	})
-	TriggerClientEvent('new_banking:disableforhour',-1, pos, 60 * 60 * 1000)
-end)
-
-RegisterServerEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(source)
-	for _,v in pairs(robbed) do
-		local timer = GetGameTimer() - v.timer
-		if timer < 3600000 then
-			TriggerClientEvent('new_banking:disableforhour', source, v.pos, timer)
-		else
-			table.remove(robbed, _)
-		end
+		xPlayer.addAccountMoney('bank', tonumber(amount))
+		TriggerClientEvent('currentbalance1', _source, xPlayer.getAccount('bank').money)
+		TriggerClientEvent("pNotify:SendNotification", _source, { text = "با تشکر از اعتماد شما، پول شما در بانک سپرده گذاری شد.", type = "success", timeout = 3000, layout = "bottomCenter"})
 	end
 end)
 
@@ -49,15 +22,14 @@ AddEventHandler('bank:withdraw', function(amount)
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local base = 0
 	amount = tonumber(amount)
-	base = xPlayer.bank
+	base = xPlayer.getAccount('bank').money
 	if amount == nil or amount <= 0 or amount > base then
-                 -- advanced notification with bank icon
-		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Bardashte Vajh', 'Meqdar Eshtebah ast', 'CHAR_BANK_MAZE', 9)
+		TriggerClientEvent("pNotify:SendNotification", _source, { text = "مقدار وارد شده صحیح نیست.", type = "error", timeout = 3000, layout = "bottomCenter"})
 	else
-		xPlayer.removeBank(amount)
+		xPlayer.removeAccountMoney('bank', amount)
 		xPlayer.addMoney(amount)
-				-- advanced notification with bank icon
-		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Bardashte Vajh', 'Shoma ~r~$' .. amount .. '~s~ Az Hesabe Khod Bardashtid', 'CHAR_BANK_MAZE', 9)
+		TriggerClientEvent('currentbalance1', _source, xPlayer.getAccount('bank').money)
+		TriggerClientEvent("pNotify:SendNotification", _source, { text = "برداشت وجه انجام شد.", type = "success", timeout = 6000, layout = "bottomCenter"})
 	end
 end)
 
@@ -65,33 +37,34 @@ RegisterServerEvent('bank:balance')
 AddEventHandler('bank:balance', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	balance = xPlayer.bank
+	balance = xPlayer.getAccount('bank').money
 	TriggerClientEvent('currentbalance1', _source, balance)
-	
 end)
 
 RegisterServerEvent('bank:transfer')
-AddEventHandler('bank:transfer', function(to, amountt)
+AddEventHandler('bank:transfer', function(to, amount)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local zPlayer = ESX.GetPlayerFromId(to)
 	local balance = 0
-	amountt = tonumber(amountt)
-	if not amountt then
-		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Enteqale Vajh', 'Lotfan Faqat Adad Vared Konid', 'CHAR_BANK_MAZE', 9)
+	
+	amount = tonumber(amount)
+	if not amount then
+		TriggerClientEvent("pNotify:SendNotification", _source, { text = "مقدار وارد شده صحیح نیست.", type = "error", timeout = 3000, layout = "bottomCenter"})
 	end
-	balance = xPlayer.bank
-	zbalance = zPlayer.bank
-	if tonumber(_source) == tonumber(to) then
-		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Enteqale Vajh', 'Shenase Shakhs Morede Nazar Yaft nashod', 'CHAR_BANK_MAZE', 9)
+	
+	balance = xPlayer.getAccount('bank').money
+	if tonumber(_source) == tonumber(to) or not zPlayer then
+		TriggerClientEvent("pNotify:SendNotification", _source, { text = "کد ملی فرد وارد شده صحیح نیست.", type = "error", timeout = 3000, layout = "bottomCenter"})
 	else
-		if balance <= 0 or balance < tonumber(amountt) or tonumber(amountt) <= 0 then
-			TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Enteqale Vajh', 'Mojodi Shoma Kafi nist', 'CHAR_BANK_MAZE', 9)
+		if balance <= 0 or balance < tonumber(amount) or tonumber(amount) <= 0 then
+			TriggerClientEvent("pNotify:SendNotification", _source, { text = "موجودی حساب کافی نیست.", type = "error", timeout = 3000, layout = "bottomCenter"})
 		else
-			xPlayer.removeBank(amountt)
-			zPlayer.addBank(amountt)
-			TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Enteqale Vajh', 'Shoma ~r~$' .. amountt .. '~s~ Be ~r~' .. string.gsub(zPlayer.name, "_", " ") .. ' ~s~Enteqad Dadid.', 'CHAR_BANK_MAZE', 9)
-			TriggerClientEvent('esx:showAdvancedNotification', to, 'Bank', 'Enteqale Vajh', '~r~$' .. amountt .. '~s~ Az tarafe ~r~' .. string.gsub(xPlayer.name, "_", " ") .. ' ~s~Be hesabe Shoma Variz Shod.', 'CHAR_BANK_MAZE', 9)
+			xPlayer.removeAccountMoney('bank', amount)
+			zPlayer.addAccountMoney('bank', tonumber(amount))
+			TriggerClientEvent('currentbalance1', _source, xPlayer.getAccount('bank').money)
+			TriggerClientEvent("pNotify:SendNotification", _source, { text = "انتقال وجه انجام شد.", type = "success", timeout = 3000, layout = "bottomCenter"})
+			TriggerClientEvent("pNotify:SendNotification", to, { text = "مبلغ " .. tostring(amount) .. " از حساب بانکی " .. tostring(_source) .. "، به حساب شما واریز شد.", type = "success", timeout = 6000, layout = "bottomCenter"})	
 		end
 	end
 end)

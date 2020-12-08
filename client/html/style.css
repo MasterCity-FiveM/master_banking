@@ -1,23 +1,23 @@
-@import url('https://fonts.googleapis.com/css?family=Syncopate|Unica+One');
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,400italic,500,500italic,700,700italic,900,900italic,300italic,300,100italic,100);
-@font-face {
-  font-family: Vazir;
-  src: url('https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir-Light.eot');
-  src: url('https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir-Light.eot?#iefix') format('embedded-opentype'),
-       url('https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir-Light.woff2') format('woff2'),
-       url('https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir-Light.woff') format('woff'),
-       url('https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir-Light.ttf') format('truetype');
-  font-weight: 300;
-}
+@import url("http://mastercity.ir/files/css/iransans.css");
+
 .rtl{
 	direction:rtl;
 }
 
 body, html {
 	overflow-y: hidden;
+	color #fff;
 }
 /* main.css */
 
+p{
+	color: #fff;
+	text-shadow:
+      -1px -1px 0 #000,  
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000;
+}
 .main1, .main{
 	text-align:center;
 	margin: 90px auto;
@@ -36,7 +36,7 @@ body, html {
 button{ 
     color: white;
     background-color:  rgba(64,209,219,0.8);
-    font-family: 'Vazir';
+    font-family: 'iransans';
 	font-size: 18px;
     margin: 0px auto;
 	padding: 5px 5px;
@@ -49,7 +49,7 @@ button{
 .FingerPrint{
     background-image: url('img/phone.png');
 	background-repeat: no-repeat;
-	font-family: 'Vazir', cursive;
+	font-family: 'iransans', cursive;
 	background-size: 620px 430px;
 	width: 600px;
 	height: 400px;
@@ -65,11 +65,10 @@ button{
 	padding-bottom: 20px;
 }
 
-
 .general{
     background-image: url('img/phone.png');
 	background-repeat: no-repeat;
-	font-family: 'Vazir', cursive;
+	font-family: 'iransans', cursive;
 	background-size: 620px 430px;
 	width: 600px;
 	height: 400px;
@@ -88,7 +87,7 @@ button{
 .depositUI{
     background-image: url('img/phone.png');
 	background-repeat: no-repeat;
-	font-family: 'Vazir', cursive;
+	font-family: 'iransans', cursive;
 	background-size: 620px 430px;
 	width: 600px;
 	height: 400px;
@@ -106,7 +105,7 @@ button{
 .withdrawUI{
     background-image: url('img/phone.png');
 	background-repeat: no-repeat;
-	font-family: 'Vazir', cursive;
+	font-family: 'iransans', cursive;
 	background-size: 620px 430px;
 	width: 600px;
 	height: 400px;
@@ -125,7 +124,7 @@ button{
 .balanceUI{
     background-image: url('img/phone.png');
 	background-repeat: no-repeat;
-	font-family: 'Vazir', cursive;
+	font-family: 'iransans', cursive;
 	background-size: 620px 430px;
 	width: 600px;
 	height: 400px;
@@ -144,7 +143,7 @@ button{
 .transferUI{
     background-image: url('img/phone.png');
 	background-repeat: no-repeat;
-	font-family: 'Vazir', cursive;
+	font-family: 'iransans', cursive;
 	background-size: 620px 430px;
 	width: 600px;
 	height: 400px;
@@ -163,7 +162,7 @@ button{
 
 
 input[type=text] {
-	font-family: 'Vazir';
+	font-family: 'iransans';
     padding: 5px 5px;
     margin: 5px 0;
 	text-align:right;
@@ -180,4 +179,6 @@ button:hover{
     background-color: rgba(1,87,155,0.8);
 }
 
+button:focus { outline:none; box-shadow: none; }
+input:focus { outline:none; box-shadow: none; }
 
