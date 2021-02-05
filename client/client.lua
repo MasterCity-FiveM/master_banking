@@ -169,7 +169,6 @@ end)
 
 RegisterNUICallback('transfer', function(data)
 	TriggerServerEvent('bank:transfer', data.to, data.amountt)
-	
 end)
 
 RegisterNUICallback('NUIFocusOff', function()
