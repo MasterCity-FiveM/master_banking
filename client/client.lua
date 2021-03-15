@@ -2,11 +2,8 @@ ESX                         = nil
 inMenu                      = false
 local showblips = true
 local atbank = true
-local bankMenu = true
 local anim = "mini@atmenter"
-local condition, blocked = false, false
 local modeltypes = {'prop_fleeca_atm', 'prop_atm_01', 'prop_atm_02', 'prop_atm_03'}
-IsPlayerUsingAtm = false
 
 local banks = {
   {name="Bank", id=108, x=150.266, y=-1040.203, z=29.374},
@@ -26,96 +23,71 @@ Citizen.CreateThread(function()
   end
 end)
 
-Citizen.CreateThread(function()
-	SetNuiFocus(false)
-	SendNUIMessage({type = 'close'})
-	inMenu = false
-	
-	while true do
-		Wait(550)
+RegisterNetEvent('master_keymap:e')
+AddEventHandler('master_keymap:e', function()
+	if not inMenu then
 		playerPed = PlayerPedId()
-		x,y,z = table.unpack(GetEntityCoords(playerPed, true))
 		IsPlayerInVehicle = IsPedInAnyVehicle(playerPed, true)
-
-		if not IsPlayerNearAtm then
-			if not IsPlayerInVehicle then
-				for k,v in pairs(modeltypes) do
-					atm = GetClosestObjectOfType(x, y, z, 0.75, GetHashKey(v), false)
-					if DoesEntityExist(atm) then
-						currentAtm = atm
-						atmX, atmY, atmZ = table.unpack(GetOffsetFromEntityInWorldCoords(currentAtm, 0.0, -0.65, 0.0))
-						IsPlayerNearAtm = true
-					end
+		if not IsPlayerInVehicle then
+			local IsPlayerNearAtm = false
+			x,y,z = table.unpack(GetEntityCoords(playerPed, true))
+			for k,v in pairs(modeltypes) do
+				atm = GetClosestObjectOfType(x, y, z, 1.75, GetHashKey(v), false)
+				if DoesEntityExist(atm) then
+					currentAtm = atm
+					atmX, atmY, atmZ = table.unpack(GetOffsetFromEntityInWorldCoords(currentAtm, 0.0, -0.65, 0.0))
+					IsPlayerNearAtm = true
 				end
 			end
-		else
-			if not DoesEntityExist(currentAtm) then
-				IsPlayerNearAtm = false
-			else
-				if GetDistanceBetweenCoords(x,y,z, atmX, atmY, atmZ, true) > 3.0 then
-					IsPlayerNearAtm = false
+			
+			if IsPlayerNearAtm then
+				inMenu = true
+				Citizen.CreateThread(function()
+					while inMenu do
+						Wait(0)
+						DisableControlAction(0, 201, true)
+						DisableControlAction(1, 201, true)	
+					end
+				end)
+				
+				RequestAnimDict("mini@atmbase")		
+				RequestAnimDict(anim)
+				while not HasAnimDictLoaded(anim) do
+					Wait(1)
 				end
+
+				SetCurrentPedWeapon(playerPed, GetHashKey("weapon_unarmed"), true)
+				TaskLookAtEntity(playerPed, currentAtm, 2000, 2048, 2)
+				Wait(500)
+				TaskGoStraightToCoord(playerPed, atmX, atmY, atmZ, 0.1, 4000, GetEntityHeading(currentAtm), 0.5)
+				Wait(2000)
+				TaskPlayAnim(playerPed, anim, "enter", 8.0, 1.0, -1, 0, 0.0, 0, 0, 0)
+				RemoveAnimDict(animDict)
+				Wait(4000)
+				TaskPlayAnim(playerPed, "mini@atmbase", "base", 8.0, 1.0, -1, 0, 0.0, 0, 0, 0)
+				RemoveAnimDict("mini@atmbase")				
+				Wait(1000)
+				PlaySoundFrontend(-1, "ATM_WINDOW", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
+				FreezeEntityPosition(playerPed, true)
+
+				SetNuiFocus(true, true)
+				SendNUIMessage({type = 'openGeneral'})
+				TriggerServerEvent('bank:balance')
 			end
 		end
 	end
 end)
 
-if bankMenu then
-	Citizen.CreateThread(function()
-		while true do
-			Wait(0)
-			playerPed = PlayerPedId()
-			IsPlayerInVehicle = IsPedInAnyVehicle(playerPed, true)
-			if not IsPlayerInVehicle then
-				if IsPlayerNearAtm and not blocked then
-					if not inMenu then
-						DisplayHelpText("Baraye dastresi be ATM ~INPUT_PICKUP~ ro bezanid")
-					else
-						ClearAllHelpMessages()	
-						DisableControlAction(0, 201, true)
-						DisableControlAction(1, 201, true)				
-					end
-      
-				if IsControlJustPressed(1, 38) then
-					RequestAnimDict("mini@atmbase")		
-					RequestAnimDict(anim)
-					while not HasAnimDictLoaded(anim) do
-						Wait(1)
-					end
-
-					SetCurrentPedWeapon(playerPed, GetHashKey("weapon_unarmed"), true)
-					TaskLookAtEntity(playerPed, currentAtm, 2000, 2048, 2)
-					Wait(500)
-					TaskGoStraightToCoord(playerPed, atmX, atmY, atmZ, 0.1, 4000, GetEntityHeading(currentAtm), 0.5)
-					Wait(2000)
-					TaskPlayAnim(playerPed, anim, "enter", 8.0, 1.0, -1, 0, 0.0, 0, 0, 0)
-					RemoveAnimDict(animDict)
-					Wait(4000)
-					TaskPlayAnim(playerPed, "mini@atmbase", "base", 8.0, 1.0, -1, 0, 0.0, 0, 0, 0)
-					RemoveAnimDict("mini@atmbase")				
-					Wait(1000)
-					PlaySoundFrontend(-1, "ATM_WINDOW", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
-					FreezeEntityPosition(playerPed, true)
-
-					inMenu = true
-					SetNuiFocus(true, true)
-					SendNUIMessage({type = 'openGeneral'})
-					TriggerServerEvent('bank:balance')
-					local ped = GetPlayerPed(-1)
-				end
-			end
-			
-			if inMenu and IsControlJustPressed(1, 322) then
-				FreezeEntityPosition(PlayerPedId(), false)
-				PlaySoundFrontend(-1, "ATM_WINDOW", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
-				inMenu = false
-				SetNuiFocus(false, false)
-				SendNUIMessage({type = 'closeAll'})
-			end
-		end
-    end
-  end)
-end
+RegisterNetEvent('master_keymap:esc')
+AddEventHandler('master_keymap:esc', function() 
+	if inMenu then
+		FreezeEntityPosition(PlayerPedId(), false)
+		PlaySoundFrontend(-1, "ATM_WINDOW", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
+		inMenu = false
+		SetNuiFocus(false, false)
+		SendNUIMessage({type = 'closeAll'})
+	end
+end)
 
 AddEventHandler('esx:onPlayerDeath', function()
 	if inMenu then
