@@ -41,6 +41,8 @@ AddEventHandler('master_keymap:e', function()
 			end
 			
 			if IsPlayerNearAtm then
+				TriggerEvent("masterking32:closeAllUI")
+				Citizen.Wait(100)
 				inMenu = true
 				Citizen.CreateThread(function()
 					while inMenu do
@@ -87,6 +89,14 @@ AddEventHandler('master_keymap:esc', function()
 		SetNuiFocus(false, false)
 		SendNUIMessage({type = 'closeAll'})
 	end
+end)
+
+RegisterNetEvent('masterking32:closeAllUI')
+AddEventHandler('masterking32:closeAllUI', function() 
+	FreezeEntityPosition(PlayerPedId(), false)
+	inMenu = false
+	SetNuiFocus(false, false)
+	SendNUIMessage({type = 'closeAll'})
 end)
 
 AddEventHandler('esx:onPlayerDeath', function()
