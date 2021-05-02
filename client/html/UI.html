@@ -99,12 +99,12 @@
 	});
 	
 	$('.exitbank').click(function(){
-		$.post('http://master_banking/NUIFocusOff', JSON.stringify({}));
+		$.post('https://master_banking/NUIFocusOff', JSON.stringify({}));
 	});
 	
 	document.onkeyup = function(data){
         if (data.which == 27){
-            $.post('http://master_banking/NUIFocusOff', JSON.stringify({}));
+            $.post('https://master_banking/NUIFocusOff', JSON.stringify({}));
         }
     }
 	
@@ -114,7 +114,7 @@
 	});
 	
 	$("#deposit_btn").click(function() {
-        $.post('http://master_banking/deposit', JSON.stringify({
+        $.post('https://master_banking/deposit', JSON.stringify({
             amount: $("#amount").val()
         }));
 		
@@ -132,7 +132,7 @@
 	});
 	
 	$("#withdraw_btn").click(function() {
-        $.post('http://master_banking/withdrawl', JSON.stringify({
+        $.post('https://master_banking/withdrawl', JSON.stringify({
             amountw: $("#amountw").val()
         }));
 		
@@ -155,7 +155,7 @@
     });
 	
 	$("#transfer_btn").click(function() {
-        $.post('http://master_banking/transfer', JSON.stringify({
+        $.post('https://master_banking/transfer', JSON.stringify({
 			to: $("#to").val(),
             amountt: $("#amountt").val()
         }));
